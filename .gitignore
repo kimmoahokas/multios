@@ -76,3 +76,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+### Project specific ###
+credentials.json
