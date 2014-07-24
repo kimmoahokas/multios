@@ -24,18 +24,28 @@ Copyright Kimmo Ahokas 2014.
 2.  Ensure that you are using your new virtual env (run `which python`). 
     **Remember to do this step every time you work on this project!**
 
-3.  Install required python libraries: `pip install -r requirements.txt`
+3.  Install required python libraries: `pip install -r requirements.txt`.
 
 4.  Edit `credentials.json` to contain your own set of OpenStack credentials. 
     Also ensure that you are able to reach given OpenStack installation from your
-    development machine
+    development machine.
+    
+## Running tests ##
+
+The simplest and fastest way to run all the tests in this project is to 
+change to src directory (`cd src`) and run 
+`python -m unittest discover multios/tests`.
+
+For more fine-grained control of tests to be executed consult the 
+[documentation of Python Unit testing framework][unittest].
 
 ## License ##
 
-    TODO: decide license
+TODO: decide license
  
  
 
 
 [virtualenvwrapper]: http://virtualenvwrapper.readthedocs.org/en/latest/ "virtualenvwrapper"
 [virtualenv]: https://virtualenv.pypa.io/en/latest/ "virtualenv"
+[unittest]: https://docs.python.org/2/library/unittest.html "Python unittest"
