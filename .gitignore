@@ -78,4 +78,4 @@ coverage.xml
 docs/_build/
 
 ### Project specific ###
-credentials.json
+config.json

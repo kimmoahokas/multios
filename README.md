@@ -26,9 +26,9 @@ Copyright Kimmo Ahokas 2014.
 
 3.  Install required python libraries: `pip install -r requirements.txt`.
 
-4.  Edit `credentials.json` to contain your own set of OpenStack credentials. 
-    Also ensure that you are able to reach given OpenStack installation from your
-    development machine.
+4.  Copy `sample_config.json` to `config.json` and edit it to contain your own
+    set of OpenStack credentials. Also ensure that you are able to reach given
+    OpenStack installation from your development machine.
     
 ## Running tests ##
 
