@@ -1,0 +1,30 @@
+# The configuration file for multios
+# This file *MUST* be valid python
+# All uppercase variables are exported to FLASK config
+
+# First Flask config #
+
+DEBUG = True
+# Required for url generation
+SERVER_NAME = 'localhost:5000'
+
+
+# Then MultiOS-specific config #
+INSTANCES = [
+    {
+        'name': 'TestInstance',
+        'auth_url': 'http://first.example.com:5000/v2.0',
+        'username': 'tester',
+        'password': 'really_secret',
+        'tenant_name': 'admin',
+        'region_name': 'regionOne'
+    },
+    {
+        'name': 'OtherInstance',
+        'auth_url': 'http://second.example.com:5000/v2.0',
+        'username': 'evaluator',
+        'password': 'doNotGuess',
+        'tenant_name': 'admin',
+        'region_name': 'regionOne'
+    }
+]

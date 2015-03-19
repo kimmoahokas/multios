@@ -1,0 +1,3 @@
+
+class MultiOSError(Exception):
+    pass

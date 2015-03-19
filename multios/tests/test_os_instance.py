@@ -204,5 +204,6 @@ class TestOpenStackInstance(unittest.TestCase):
         self.keystone_mock.return_value.service_catalog.url_for \
             .assert_called_once_with(service_type='metering')
         # TODO: how to check that the mock was called with certain lambda?
-        self.ceilometer_mock.assert_called_once_with(self.catalog['metering'],
-                                                     token=self.access_token)
+        self.ceilometer_mock.assert_called_once_with(
+            self.catalog['metering'],
+            token=lambda: self.access_token)

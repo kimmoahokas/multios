@@ -278,6 +278,15 @@ class OpenStackInstance(object):
         else:
             return 'Not connected'
 
+    def launch_instance(self):
+        pass
+
+    def stop_instance(self, instance):
+        pass
+
+    def create_network(self):
+        pass
+
     def __str__(self):
         data = {'name': self.name,
                 'keystone': self.get_keystone_info(),
@@ -287,11 +296,11 @@ class OpenStackInstance(object):
                 'cinder': self.get_cinder_info(),
                 'ceilometer': self.get_ceilometer_info(),
                 'heat': self.get_heat_info()}
-        return "OpenStack instance '{name}' with services:\n" \
-               "  Keystone: {keystone}\n" \
-               "  Glance: {glance}\n" \
-               "  Nova: {nova}\n" \
-               "  Neutron: {neutron}\n" \
-               "  Cinder: {cinder}\n" \
-               "  Ceilometer: {ceilometer}\n" \
-               "  Heat: {heat}".format(**data)
+        return 'OpenStack instance \'{name}\' with services:\n' \
+               '  Keystone: {keystone}\n' \
+               '  Glance: {glance}\n' \
+               '  Nova: {nova}\n' \
+               '  Neutron: {neutron}\n' \
+               '  Cinder: {cinder}\n' \
+               '  Ceilometer: {ceilometer}\n' \
+               '  Heat: {heat}'.format(**data)

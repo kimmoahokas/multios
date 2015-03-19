@@ -6,3 +6,5 @@ python-heatclient
 python-keystoneclient
 python-neutronclient
 python-novaclient
+flask
+flask-restful

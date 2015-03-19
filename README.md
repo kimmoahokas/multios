@@ -75,6 +75,14 @@ To add new packages to the project add the package name to
 and then use `pip-review` and `pip-dump` in similar way as when updating 
 packages.
 
+## Remarks about the code ##
+
+The `MultiOSCLI` class in file `cli.py` uses Python [docopt][] module to parse 
+command line arguments. Because of this it is **required** that the docstring
+in the beginning of the class contains all the possible command line options,
+commands and arguments in the standard POSIX notation. The argument parser is
+constructed from the usage string automatically.
+
 ## License ##
 
 TODO: decide license
@@ -87,3 +95,4 @@ TODO: decide license
 [unittest]: https://docs.python.org/2/library/unittest.html "Python unittest"
 [pinning]: http://nvie.com/posts/pin-your-packages/ "Pin Your Packages"
 [pip-tools]: https://github.com/nvie/pip-tools "pip-tools"
+[docopt]: https://github.com/docopt/docopt "Pythonic command line arguments parser, that will make you smile http://docopt.org"
