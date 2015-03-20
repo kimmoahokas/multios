@@ -9,7 +9,7 @@ The tool was created as a part of SIGMONA research project at Aalto University
 School of Science, Department of Computer Science, Communication Networks
 research group.
 
-Copyright Kimmo Ahokas 2014.
+Copyright Kimmo Ahokas 2015.
 
 ## Getting started ##
 
@@ -44,14 +44,20 @@ Copyright Kimmo Ahokas 2014.
 4.  Install required python libraries and development tools:
     `pip install -r requirements.txt -r dev-requirements.txt`.
 
-5.  Copy `sample_config.json` to `config.json` and edit it to contain your own
+5.  Copy `multios.cfg.sample` to `multios.cfg` and edit it to contain your own
     set of OpenStack credentials. Also ensure that you are able to reach given
     OpenStack installation from your development machine.
     
+6.  Run the development server with command `multios server`. If the project 
+    can't load config file, then do
+    `export MULTIOS_CONFIG=/absolute/path/to/multios.cfg` and run the server 
+    again.
+    
+7.  Test different end-points either with multios cli or curl.
+    
 ## Running tests ##
 
-The simplest and fastest way to run all the tests in this project is to 
-change to source directory (`cd src`) and run 
+The simplest and fastest way to run all the tests in this project is to run 
 `python -m unittest discover multios/tests`.
 
 For more fine-grained control of tests to be executed consult the 
