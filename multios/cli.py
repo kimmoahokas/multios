@@ -43,7 +43,7 @@ Options:
         self.parse_command_line()
         self.configure_logging()
         try:
-            self.start_cli()
+            self.run_command()
             return 0
         except exceptions.MultiOSError as e:
             if self.logger is not None:
@@ -81,7 +81,7 @@ Options:
             else logging.WARNING
         return log_level
 
-    def start_cli(self):
+    def run_command(self):
         if self.parsed_arguments['info']:
             self.print_info()
         elif self.parsed_arguments['boot']:
@@ -95,15 +95,15 @@ Options:
 
     def print_info(self):
         """Print information about connected OpenStack instances."""
-        pass
+        print('Should print basic info. Not implemented.')
 
     def boot_instance(self):
         """Launch instance in one of the configured OpenStacks."""
-        pass
+        print('Should boot new instance. Not implemented.')
 
     def stop_instance(self, instance):
         """Stop specified instance."""
-        pass
+        print('Should stop specified instance. Not implemented.')
 
     def start_server(self):
         """Start Development Multios API server."""
@@ -111,7 +111,7 @@ Options:
         # Only import the Flask app when needed. This also makes Flask to use
         # the same logging configuration created by CLI.
         from multios.server import app
-        app.run()
+        app.run(host='0.0.0.0')
 
 
 def main(argv=None):

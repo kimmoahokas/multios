@@ -5,9 +5,7 @@ import sys
 from flask import Flask
 from flask.ext import restful
 
-from api import load_resources
-
-def _load_config(app):
+def _load_config():
     """Load Flask configuration from multiple locations.
     :param app: Flask app to be configured
     :return: None
@@ -54,7 +52,11 @@ def _load_config(app):
 # Note that this is done when ANY component from multios.server is IMPORTED!
 app = Flask(__name__)
 app.logger.debug('Created Flask APP with name "%s"', app.name)
-_load_config(app)
+_load_config()
 api = restful.Api(app)
 app.logger.debug('Flask-Restful API created')
+
+# All project specific files can be imported only after app and api have been
+# created
+from multios.server.resource_loader import load_resources
 load_resources(app, api)

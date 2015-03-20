@@ -1,7 +1,7 @@
 __author__ = 'Kimmo Ahokas'
 
 
-from resources.vm import VM
+from multios.server.resources.vm import VM
 
 
 def load_resources(app, api):
