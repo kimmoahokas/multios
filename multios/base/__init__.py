@@ -2,4 +2,4 @@ __author__ = 'Kimmo Ahokas'
 
 import logging
 
-logging.getLogger('multios.lib').addHandler(logging.NullHandler())
+logging.getLogger('multios.base').addHandler(logging.NullHandler())

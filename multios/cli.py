@@ -4,6 +4,7 @@ import sys
 import logging
 
 import docopt
+
 from multios.base import exceptions
 
 logger = logging.getLogger('multios.cli')
@@ -61,10 +62,11 @@ Options:
         :return: None
         """
         log_level = self.get_log_level()
-        root_logger = logging.getLogger('multios')
+
+        root_logger = logging.getLogger('multios.cli')
         root_logger.setLevel(log_level)
         ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
+        ch.setLevel(log_level)
         formatter = logging.Formatter('%(levelname)s %(name)s: %(message)s')
         ch.setFormatter(formatter)
         root_logger.addHandler(ch)
@@ -110,8 +112,10 @@ Options:
 
         # Only import the Flask app when needed. This also makes Flask to use
         # the same logging configuration created by CLI.
+        self.logger.debug('Importing multios.server from cli.start_server()')
         from multios.server import app
-        app.run(host='0.0.0.0')
+        app.run(host='0.0.0.0', use_reloader=False,
+                debug=True, use_debugger=False)
 
 
 def main(argv=None):

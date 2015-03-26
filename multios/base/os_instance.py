@@ -9,6 +9,7 @@ import neutronclient.v2_0.client as neutronclient
 import cinderclient.v2.client as cinderclient
 import heatclient.v1.client as heatclient
 import ceilometerclient.v2.client as ceilometerclient
+from ceilometerclient import  exc as ceilometer_exceptions
 from keystoneclient import exceptions as keystone_exceptions
 import logging
 
@@ -64,7 +65,7 @@ class OpenStackInstance(object):
         self._ceilometer_connection_tried = False
         self._heat_connection_tried = False
 
-        self.logger = logging.getLogger('multios.{}.{}'.format(
+        self.logger = logging.getLogger('multios.base.{}.{}'.format(
             type(self).__name__,
             name))
         self._connect_keystone()
@@ -263,12 +264,18 @@ class OpenStackInstance(object):
 
     def get_ceilometer_info(self):
         if self.ceilometer is not None:
-            meters = self.ceilometer.meters.list()
-            alarms = self.ceilometer.alarms.list()
-            self.logger.debug('ceilometer meters: {}'.format(meters))
-            self.logger.debug('ceilometer alarms: {}'.format(alarms))
-            return '{} meter(s) and {} alarm(s)'.format(len(meters),
-                                                        len(alarms))
+            try:
+                meters = self.ceilometer.meters.list()
+                alarms = self.ceilometer.alarms.list()
+                self.logger.debug('ceilometer meters: {}'.format(meters))
+                self.logger.debug('ceilometer alarms: {}'.format(alarms))
+                return '{} meter(s) and {} alarm(s)'.format(len(meters),
+                                                            len(alarms))
+            except ceilometer_exceptions.CommunicationError as e:
+                self.logger.exception('Communication error while '
+                                      'contacting Ceilometer', exc_info=e)
+                return "Failed communication with Ceilometer: {}".format(
+                    e.message)
         else:
             return 'Not connected'
 

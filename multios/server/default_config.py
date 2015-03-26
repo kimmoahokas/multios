@@ -9,6 +9,7 @@ __author__ = 'Kimmo Ahokas'
 
 DEBUG = False
 
+
 # The default config file name
 CONFIG_FILE = 'multios.cfg'
 # The name of environment variable which should include optional configuration

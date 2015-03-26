@@ -1,9 +1,10 @@
 from __future__ import print_function
-import os
 import sys
 
+import os
 from flask import Flask
 from flask.ext import restful
+
 
 def _load_config():
     """Load Flask configuration from multiple locations.
@@ -28,8 +29,7 @@ def _load_config():
     try:
         app.config.from_envvar(app.config['CONFIG_ENVVAR'], silent=False)
         user_config = True
-        app.logger.info('Loaded config from file pointed by environment '
-                        'variable  %s',
+        app.logger.info('Loaded config from file %s',
                         os.environ.get(app.config['CONFIG_ENVVAR']))
     except RuntimeError:
         app.logger.info('Environment variable %s was not set',
@@ -46,13 +46,24 @@ def _load_config():
               file=sys.stderr)
         sys.exit(1)
     else:
-        app.logger.debug('Successfully loaded user configuration')
+        app.logger.info('Successfully loaded user configuration')
 
 # Init the Flask app
 # Note that this is done when ANY component from multios.server is IMPORTED!
 app = Flask(__name__)
+app.debug_log_format = '%(levelname)s %(name)s: %(message)s'
 app.logger.debug('Created Flask APP with name "%s"', app.name)
 _load_config()
+
+# TODO: figure out way to prevent circular import
+from base.os_instance import OpenStackInstance
+app.logger.info('Connecting to configured OpenStack instances')
+os_instances = []
+for instance in app.config['INSTANCES']:
+    os_instances.append(OpenStackInstance.create_from_config(instance))
+app.logger.info('OpenStack instances connected!')
+
+app.logger.debug('Creating Flask-Restful API')
 api = restful.Api(app)
 app.logger.debug('Flask-Restful API created')
 
