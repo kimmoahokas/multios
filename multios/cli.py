@@ -114,6 +114,8 @@ Options:
         # the same logging configuration created by CLI.
         self.logger.debug('Importing multios.server from cli.start_server()')
         from multios.server import app
+        # For some reason the flask app will be initialized multiple times
+        # reloader is enabled
         app.run(host='0.0.0.0', use_reloader=False,
                 debug=True, use_debugger=False)
 

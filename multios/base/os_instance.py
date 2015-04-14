@@ -9,7 +9,7 @@ import neutronclient.v2_0.client as neutronclient
 import cinderclient.v2.client as cinderclient
 import heatclient.v1.client as heatclient
 import ceilometerclient.v2.client as ceilometerclient
-from ceilometerclient import  exc as ceilometer_exceptions
+from ceilometerclient import exc as ceilometer_exceptions
 from keystoneclient import exceptions as keystone_exceptions
 import logging
 
@@ -75,42 +75,71 @@ class OpenStackInstance(object):
 
     @property
     def keystone(self):
+        """
+
+        :rtype : keystoneclient.Client
+        """
         if self._keystone is None:
             self._connect_keystone()
         return self._keystone
 
     @property
     def glance(self):
+        """
+
+        :rtype : glanceclient.Client
+        """
         if self._glance is None:
             self._connect_glance()
         return self._glance
 
     @property
     def nova(self):
+        """
+
+        :rtype : novaclient.Client
+        """
         if self._nova is None:
             self._connect_nova()
         return self._nova
 
     @property
     def neutron(self):
+        """
+
+        :rtype : neutronclient.Client
+        """
         if self._neutron is None:
             self._connect_neutron()
         return self._neutron
 
     @property
     def cinder(self):
+        """
+
+        :rtype : cinderclient.Client
+        """
         if self._cinder is None:
             self._connect_cinder()
         return self._cinder
 
     @property
     def ceilometer(self):
+        """
+
+        :rtype : ceilometerclient.Client
+        """
         if self._ceilometer is None:
             self._connect_ceilometer()
         return self._ceilometer
 
     @property
     def heat(self):
+        """
+        Get the Heat instance.
+
+        :rtype: heatclient.Client
+        """
         if self._heat is None:
             self._connect_heat()
         return self._heat
