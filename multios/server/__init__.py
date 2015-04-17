@@ -5,6 +5,8 @@ import os
 from flask import Flask
 from flask.ext import restful
 
+from base.os_instance import OpenStackInstance
+
 
 def _load_config():
     """Load Flask configuration from multiple locations.
@@ -55,8 +57,6 @@ app.debug_log_format = '%(levelname)s %(name)s: %(message)s'
 app.logger.debug('Created Flask APP with name "%s"', app.name)
 _load_config()
 
-# TODO: figure out way to prevent circular import
-from base.os_instance import OpenStackInstance
 app.logger.info('Connecting to configured OpenStack instances')
 os_instances = []
 for instance in app.config['INSTANCES']:
@@ -67,7 +67,8 @@ app.logger.debug('Creating Flask-Restful API')
 api = restful.Api(app)
 app.logger.debug('Flask-Restful API created')
 
-# All project specific files can be imported only after app and api have been
-# created
-from multios.server.resource_loader import load_resources
-load_resources(app, api)
+# Import Flask-Restful resources. This is needed to register the routes
+app.logger.debug('Loading API resources...')
+# See file resources/__init__.py for list of imported classes
+import resources
+app.logger.debug('API resources successfully loaded')

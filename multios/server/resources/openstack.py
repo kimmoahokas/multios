@@ -3,7 +3,7 @@ __author__ = 'Kimmo Ahokas'
 
 from flask.ext.restful import Resource, fields, marshal_with, abort
 
-from multios.server import app, os_instances
+from multios.server import app, api, os_instances
 
 os_fields = {
     'name': fields.String,
@@ -20,15 +20,19 @@ os_fields = {
 }
 
 
+@api.resource('/os')
 class OpenStackList(Resource):
     @marshal_with(os_fields)
     def get(self):
+        app.logger.debug('OpenStackList.get() called')
         return os_instances
 
 
+@api.resource('/os/<int:os_id>')
 class OpenStack(Resource):
     @marshal_with(os_fields)
     def get(self, os_id):
+        app.logger.debug('OpenStack.get() called with id {}'.format(os_id))
         # TODO: error handling
         os = None
         try:
