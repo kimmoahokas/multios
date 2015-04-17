@@ -1,4 +1,4 @@
-
+from base.exceptions import MultiOSError
 
 __author__ = 'Kimmo Ahokas'
 
@@ -314,8 +314,31 @@ class OpenStackInstance(object):
         else:
             return 'Not connected'
 
-    def launch_instance(self):
-        pass
+    def _find_network_by_name(self, net_name):
+        # TODO: fix this. network is not found
+        net_id = self.neutron.show_network(net_name)
+        return net_id
+
+    def _find_image_by_name(self, image_name):
+        image_list = list(self.glance.images.list(filters={'name': image_name}))
+        if len(image_list) is not 1:
+            raise MultiOSError('No such image "{}"'.format(image_name))
+        return image_list[0]
+
+    def launch_instance(self, params):
+        name = params['name']
+        image = self._find_image_by_name(params['image'])
+        flavor = params['flavor']
+        security_groups = params['security_groups']
+        key_name = params['key_name']
+        nics = []
+        for network in params['networks']:
+            nics.append({'net_id': self._find_network_by_name(network)})
+
+        self.nova.servers.create(name, image, flavor,
+                                 security_goups=security_groups,
+                                 key_name=key_name,
+                                 nics=nics)
 
     def stop_instance(self, instance):
         pass

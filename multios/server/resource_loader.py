@@ -4,6 +4,9 @@ from .resources.openstack import OpenStackList, OpenStack
 from .resources.vm import VMList, VM
 
 
+# TODO: get rid of this thing. instead use @api.resource decorator for
+# resource classes
+
 def load_resources(app, api):
     """Load Flask-Restful API resources.
     :param app: Flask APP instance
@@ -13,7 +16,7 @@ def load_resources(app, api):
 
     app.logger.debug('Loading API resources...')
 
-    # Overal OpenStak resources
+    # Overall OpenStack resources
     api.add_resource(OpenStackList, '/os')
     api.add_resource(OpenStack, '/os/<int:os_id>')
 

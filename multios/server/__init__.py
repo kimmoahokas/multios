@@ -4,6 +4,8 @@ import sys
 import os
 from flask import Flask
 from flask.ext import restful
+from base.scheduler import Scheduler
+from base.os_instance import OpenStackInstance
 
 
 def _load_config():
@@ -56,11 +58,11 @@ app.logger.debug('Created Flask APP with name "%s"', app.name)
 _load_config()
 
 # TODO: figure out way to prevent circular import
-from base.os_instance import OpenStackInstance
 app.logger.info('Connecting to configured OpenStack instances')
 os_instances = []
 for instance in app.config['INSTANCES']:
     os_instances.append(OpenStackInstance.create_from_config(instance))
+scheduler = Scheduler(os_instances)
 app.logger.info('OpenStack instances connected!')
 
 app.logger.debug('Creating Flask-Restful API')
