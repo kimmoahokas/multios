@@ -1,4 +1,5 @@
-
+from base.exceptions import MultiOSError
+from base.vm_instance import VMInstance
 
 __author__ = 'Kimmo Ahokas'
 
@@ -72,6 +73,10 @@ class OpenStackInstance(object):
 
         if not self.lazy_load:
             self._connect_all_optional_services()
+
+    @property
+    def vm_instances(self):
+        return [VMInstance(x) for x in self.nova.servers.list()]
 
     @property
     def keystone(self):
@@ -314,8 +319,43 @@ class OpenStackInstance(object):
         else:
             return 'Not connected'
 
-    def launch_instance(self):
-        pass
+    def _find_flavor_by_name(self, flavor_name):
+        flavors = self.nova.flavors.list(detailed=False)
+        flavor = filter(lambda x: x.name == flavor_name, flavors)[0]
+        return flavor
+
+    def _find_network_by_name(self, net_name):
+        data = self.neutron.list_networks(fields='id', name=net_name)
+        if len(data['networks']) == 1:
+            return data['networks'][0]['id']
+        raise MultiOSError('No such network "{}"'.format(net_name))
+
+    def _find_image_by_name(self, image_name):
+        image_list = list(self.glance.images.list(filters={'name': image_name}))
+        if len(image_list) is not 1:
+            raise MultiOSError('No such image "{}"'.format(image_name))
+        return image_list[0]
+
+    def launch_instance(self, params):
+        name = params['name']
+        image = self._find_image_by_name(params['image'])
+        flavor = self._find_flavor_by_name(params['flavor'])
+        security_groups = [{'name': x} for x in params['security_groups']]
+        key_name = params['key_name']
+        nics = [{'net-id': self._find_network_by_name(network)} for network in
+                params['networks']]
+
+        try:
+            server = self.nova.servers.create(name, image, flavor,
+                                              security_goups=security_groups,
+                                              key_name=key_name,
+                                              nics=nics)
+            return VMInstance(self, server)
+        except Exception as e:
+            # TODO: don't catch all exceptions
+            self.logger.exception("Unable to start instance", exc_info=e)
+            raise MultiOSError(e.message)
+
 
     def stop_instance(self, instance):
         pass
