@@ -58,18 +58,22 @@ Options:
                                               help=True, version=VERSION)
 
     def configure_logging(self):
-        """ Setup the Python logging module. The same config is used by server.
+        """ Setup the Python logging module for MultiOS.
         :return: None
         """
         log_level = self.get_log_level()
 
-        root_logger = logging.getLogger('multios.cli')
-        root_logger.setLevel(log_level)
         ch = logging.StreamHandler()
         ch.setLevel(log_level)
         formatter = logging.Formatter('%(levelname)s %(name)s: %(message)s')
         ch.setFormatter(formatter)
-        root_logger.addHandler(ch)
+
+        # Don't configure logging for server here
+        for target in ('multios.cli', 'multios.base'):
+            root_logger = logging.getLogger(target)
+            root_logger.setLevel(log_level)
+            root_logger.addHandler(ch)
+
         self.logger = logging.getLogger('multios.cli.MultiosCLI')
         self.logger.info('Logging configured with log level %s',
                          logging.getLevelName(log_level))

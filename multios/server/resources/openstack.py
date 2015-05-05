@@ -1,13 +1,21 @@
 __author__ = 'Kimmo Ahokas'
 
-
+from flask import url_for
 from flask.ext.restful import Resource, fields, marshal_with, abort
 
 from multios.server import app, os_instances
 
+
+def get_os_instance_url(os_instance):
+    return url_for('openstack', _external=True,
+                   os_id=os_instances.index(os_instance))
+
+
 os_fields = {
     'name': fields.String,
-    'auth_url': fields.String,
+    'id': fields.Integer(attribute=lambda x: os_instances.index(x)),
+    'url': fields.String(attribute=get_os_instance_url),
+    'auth_url': fields.String(),
     'tenant': fields.String(attribute='tenant_name'),
     'region': fields.String(attribute='region_name'),
     'keystone': fields.String(attribute=lambda os: os.get_keystone_info()),

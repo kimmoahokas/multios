@@ -12,6 +12,9 @@ class Scheduler(object):
         :return: OpenStackInstance to be used for the VM
         :rtype: multios.base.os_instance.OpenStackInstance
         """
+
+        # TODO: ensure that all os instance have same amount of virtual
+        # machines running
         current = self.next_instance
         self.next_instance = (self.next_instance + 1) % len(self._os_instances)
         return self._os_instances[current]
