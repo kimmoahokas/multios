@@ -20,3 +20,6 @@ class VMInstance(object):
     @property
     def id(self):
         return self._server._info['id']
+
+    def delete(self):
+        self.openstack.nova.servers.delete(self.id)

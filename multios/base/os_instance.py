@@ -1,5 +1,7 @@
-from base.exceptions import MultiOSError
-from base.vm_instance import VMInstance
+import random
+from novaclient.exceptions import NotFound
+from multios.base.exceptions import MultiOSError
+from multios.base.vm_instance import VMInstance
 
 __author__ = 'Kimmo Ahokas'
 
@@ -148,6 +150,26 @@ class OpenStackInstance(object):
         if self._heat is None:
             self._connect_heat()
         return self._heat
+
+    @property
+    def vm_count(self):
+        if self.nova is not None:
+            return len(self.nova.servers.list(search_opts={'name': 'multios'}))
+        else:
+            raise ValueError("Unknown vm instance count")
+
+    @property
+    def vm_instances(self):
+        """
+
+        :return: List of VM instances in this OpenStack
+        :rtype: list(multios.base.vm_instance.VMInstance)
+        """
+        if self.nova is not None:
+            servers = self.nova.servers.list(search_opts={'name': 'multios'})
+            return [VMInstance(self, server) for server in servers]
+        else:
+            raise ValueError("Could not list vm instances")
 
     def _connect_all_optional_services(self):
         self._connect_glance()
@@ -337,7 +359,7 @@ class OpenStackInstance(object):
         return image_list[0]
 
     def launch_instance(self, params):
-        name = params['name']
+        name = self.generate_vm_name(params)
         image = self._find_image_by_name(params['image'])
         flavor = self._find_flavor_by_name(params['flavor'])
         security_groups = [{'name': x} for x in params['security_groups']]
@@ -356,6 +378,25 @@ class OpenStackInstance(object):
             self.logger.exception("Unable to start instance", exc_info=e)
             raise MultiOSError(e.message)
 
+    def find_vm_instance(self, vm_id):
+        if self.nova is None:
+            raise MultiOSError("Can't connect to nova")
+        try:
+            server = self.nova.servers.get(vm_id)
+            if server is not None:
+                return VMInstance(self, server)
+        except NotFound:
+            raise MultiOSError('No such vm instance')
+
+
+    def generate_vm_name(self, params):
+        """Generate name for vm instance.
+        The name is in format "multios-vm_prefix-xxxx" where xxxx is
+        random four-character hex number.
+        """
+        rand = random.randrange(16 ** 4)
+        name = 'multios-{}-{:04x}'.format(params['name_prefix'], rand)
+        return name
 
     def stop_instance(self, instance):
         pass
@@ -380,3 +421,5 @@ class OpenStackInstance(object):
                '  Cinder: {cinder}\n' \
                '  Ceilometer: {ceilometer}\n' \
                '  Heat: {heat}'.format(**data)
+
+
