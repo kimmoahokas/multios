@@ -388,6 +388,17 @@ class OpenStackInstance(object):
         except NotFound:
             raise MultiOSError('No such vm instance')
 
+    def find_vm_by_ip(self, ip):
+        if self.nova is None:
+            raise MultiOSError("Can't connect to nova")
+        try:
+            servers = list(self.nova.servers.list(search_opts={'ip': ip}))
+            if len(servers) == 1:
+                return VMInstance(self, servers[0])
+            else:
+                raise MultiOSError("No instance with IP '{}' found!".format(ip))
+        except NotFound:
+            raise MultiOSError('No such vm instance')
 
     def generate_vm_name(self, params):
         """Generate name for vm instance.

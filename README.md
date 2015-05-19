@@ -54,7 +54,17 @@ Copyright Kimmo Ahokas 2015.
     again.
     
 7.  Test different end-points either with multios cli or curl.
+
+## Running in 'production' mode ##
     
+1.  Install gunicorn with gevent support:
+    `pip install gunicorn greenlet gevent`
+    Note: You need at least python-dev package.
+    
+2.  Run command:
+    `gunicorn -k gevent -b 0.0.0.0:5000 --keep-alive 6000 multios .server:app`
+
+
 ## Running tests ##
 
 The simplest and fastest way to run all the tests in this project is to run 

@@ -57,11 +57,30 @@ class VMList(Resource):
         return vm_instance
 
     def delete(self):
-        vm_instance = scheduler.schedule_deletion()
+        parser = reqparse.RequestParser()
+        parser.add_argument('ip', type=str)
+        args = parser.parse_args()
+        vm_instance = None
+        if args['ip'] is not None:
+            vm_instance = self._find_vm_by_ip(args['ip'])
+        else:
+            vm_instance = scheduler.schedule_deletion()
         vm_instance.delete()
         return {'status': 'Successfully deleted instance {}'.format(
             vm_instance.id)}
 
+    def _find_vm_by_ip(self, ip):
+        for os in os_instances:
+            try:
+                vm = os.find_vm_by_ip(ip)
+                if vm is not None:
+                    return vm
+                else:
+                    return None
+            except MultiOSError:
+                app.logger.debug("Instance not found from OS {}".format(
+                    os.name))
+        abort(404, info='Instance not found')
 
 @api.resource('/vm/<string:vm_id>')
 class VM(Resource):

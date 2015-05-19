@@ -4,8 +4,8 @@ import sys
 import os
 from flask import Flask
 from flask.ext import restful
-from base.scheduler import Scheduler
-from base.os_instance import OpenStackInstance
+from multios.base.scheduler import Scheduler
+from multios.base.os_instance import OpenStackInstance
 
 
 def _load_config():
